@@ -25,7 +25,7 @@ public class FastCollinearPoints {
         Arrays.sort(points);
 
         for (int i = 0; i < points.length - 1; i++) {
-            if (points[i] == points[i+1])
+            if (points[i].compareTo(points[i + 1]) == 0)
                 throw new IllegalArgumentException("Array must not have duplicates");
         }
 
@@ -39,13 +39,18 @@ public class FastCollinearPoints {
             for (int q = p + 1; q < points.length - 1; q++) {
                 if (points[p].slopeTo(points[q]) == points[p].slopeTo(points[q + 1])) {
                     count++;
-                }
-                else if (count >= 4) {
-                    lines.add(new LineSegment(points[p], points[p]));
+                } else if (count >= 4) {
+                    lines.add(new LineSegment(points[p], points[q]));
                 }
             }
         }
     }
+
+//    private LineSegment getLineFromPoints(ArrayList<Point> points) {
+//
+//        Arrays.sort(points);
+//        return new LineSegment(points[0], points[points.length - 1]);
+//    }
 
 
     /**

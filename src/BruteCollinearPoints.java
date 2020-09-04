@@ -34,7 +34,7 @@ public class BruteCollinearPoints {
         Arrays.sort(points);
 
         for (int i = 0; i < points.length - 1; i++) {
-            if (points[i] == points[i+1])
+            if (points[i].compareTo(points[i + 1]) == 0)
                 throw new IllegalArgumentException("Array must not have duplicates");
         }
 
