@@ -31,31 +31,53 @@ public class FastCollinearPoints {
 
         lines = new ArrayList<>();
         int count;
+        Point[] cloneForIter = points.clone();
+        Point[] visited = new Point[points.length];
+        ArrayList<Point> inline;
 
-        for (int p = 0; p < points.length - 2; p++) {
-            Arrays.sort(points, points[p].slopeOrder());
+        for (int p = 0; p < points.length - 1; p++) {
+
+            Arrays.sort(cloneForIter, points[p].slopeOrder());
+
+            inline = new ArrayList<>();
+            inline.add(cloneForIter[0]);
             count = 1;
 
-            for (int q = p + 1; q < points.length - 1; q++) {
-                if (points[p].slopeTo(points[q]) == points[p].slopeTo(points[q + 1])) {
+            for (int q = 1; q < cloneForIter.length; q++) {
+                if (cloneForIter[0].slopeTo(cloneForIter[q-1]) == cloneForIter[0].slopeTo(cloneForIter[q])) {
                     count++;
-                } else if (count >= 4) {
-                    lines.add(new LineSegment(points[p], points[q]));
+                    inline.add(cloneForIter[q]);
+                }
+                else {
+                    if (count >= 4  && !visitedContains(inline, visited)) {
+                        lines.add(getLineFromPoints(inline));
+                        visited[p] = points[p];
+                    }
                 }
             }
         }
     }
 
-//    private LineSegment getLineFromPoints(ArrayList<Point> points) {
-//
-//        Arrays.sort(points);
-//        return new LineSegment(points[0], points[points.length - 1]);
-//    }
+    private boolean visitedContains(ArrayList<Point> inline, Point[] visited) {
+        for (Point linePoint : inline) {
+            for (Point visit : visited) {
+                if (linePoint.equals(visit)) return true;
+            }
+
+        }
+        return false;
+    }
+
+    private LineSegment getLineFromPoints(ArrayList<Point> input) {
+        Point[] inline = input.toArray(new Point[input.size()]);
+        Arrays.sort(inline);
+        return new LineSegment(inline[0], inline[inline.length - 1]);
+    }
 
 
     /**
      * Return number of collinear line segments that
-     * contains four points
+     * contains four and more points
      *
      * @return the number of line segments
      */
@@ -76,7 +98,7 @@ public class FastCollinearPoints {
 
     public static void main(String[] args) {
         // read the n points from a file
-        In in = new In(args[0]);
+        In in = new In(args[0]); // "D:\\rs1423.txt"
         int n = in.readInt();
         Point[] points = new Point[n];
         for (int i = 0; i < n; i++) {
@@ -84,8 +106,6 @@ public class FastCollinearPoints {
             int y = in.readInt();
             points[i] = new Point(x, y);
         }
-
-
 
         // draw the points
         StdDraw.enableDoubleBuffering();
