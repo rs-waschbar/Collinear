@@ -13,21 +13,8 @@ public class FastCollinearPoints {
      * @param inputPoints array of points to search collinear lines
      */
     public FastCollinearPoints(Point[] inputPoints) {
-        // input checks
-        if (inputPoints == null)
-            throw new IllegalArgumentException("Input array is null");
 
-        for (Point point : inputPoints) {
-            if (point == null)
-                throw new IllegalArgumentException("One or more point values is null");
-        }
-        Point[] points = inputPoints.clone();
-        Arrays.sort(points);
-
-        for (int i = 0; i < points.length - 1; i++) {
-            if (points[i].compareTo(points[i + 1]) == 0)
-                throw new IllegalArgumentException("Array must not have duplicates");
-        }
+        Point[] points = createCloneSortArray(inputPoints);
 
         lines = new ArrayList<>();
         int count;
@@ -56,6 +43,32 @@ public class FastCollinearPoints {
                 }
             }
         }
+    }
+
+    /**
+     * Helper method to split logic of Constructor.
+     * It's check input data for Exceptions
+     * and create sort copy of original array
+     *
+     * @param inputPoints Array of points that gets passed into constructor
+     * @return sorting copy of Array for shield original array from modifications
+     */
+    private Point[] createCloneSortArray(Point[] inputPoints) {
+        if (inputPoints == null)
+            throw new IllegalArgumentException("Input array is null");
+
+        for (Point point : inputPoints) {
+            if (point == null)
+                throw new IllegalArgumentException("One or more point values is null");
+        }
+        Point[] points = inputPoints.clone();
+        Arrays.sort(points);
+
+        for (int i = 0; i < points.length - 1; i++) {
+            if (points[i].compareTo(points[i + 1]) == 0)
+                throw new IllegalArgumentException("Array must not have duplicates");
+        }
+        return points;
     }
 
     private boolean visitedContains(ArrayList<Point> inline, Point[] visited) {
