@@ -98,7 +98,7 @@ public class FastCollinearPoints {
 
     public static void main(String[] args) {
         // read the n points from a file
-        In in = new In(args[0]); // "D:\\rs1423.txt"
+        In in = new In("D:\\input20.txt"); // "D:\\rs1423.txt" test file
         int n = in.readInt();
         Point[] points = new Point[n];
         for (int i = 0; i < n; i++) {

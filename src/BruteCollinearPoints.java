@@ -30,8 +30,9 @@ public class BruteCollinearPoints {
             if (point == null)
                 throw new IllegalArgumentException("One or more point values is null");
         }
-        Point[] points = inputPoints.clone();
-        Arrays.sort(points);
+        // Point[] points = inputPoints.clone();
+        Point[] points = Arrays.copyOf(inputPoints, inputPoints.length);
+                Arrays.sort(points);
 
         for (int i = 0; i < points.length - 1; i++) {
             if (points[i].compareTo(points[i + 1]) == 0)
@@ -39,7 +40,7 @@ public class BruteCollinearPoints {
         }
 
         lines = new ArrayList<>();
-        Point[] inline = new Point[4];
+        //Point[] inline = new Point[4];
 
         // bruteforce iteration for every four points
         for (int p = 0; p < points.length - 3; p++) {
@@ -49,11 +50,13 @@ public class BruteCollinearPoints {
 
                         if (points[p].slopeTo(points[q]) == points[p].slopeTo(points[r])
                             && points[p].slopeTo(points[q]) == points[p].slopeTo(points[s])) {
-                            inline[0] = points[p];
+
+                            lines.add(new LineSegment(points[p], points[s]));
+                            /*inline[0] = points[p];
                             inline[1] = points[q];
                             inline[2] = points[r];
                             inline[3] = points[s];
-                            lines.add(getLineFromPoints(inline));
+                            lines.add(getLineFromPoints(inline));*/
                         }
                     }
                 }
@@ -89,7 +92,7 @@ public class BruteCollinearPoints {
 
     public static void main(String[] args) {
         // read the n points from a file
-        In in = new In(args[0]); // D:\input200.txt
+        In in = new In("D:\\input20.txt"); // D:\input200.txt test file
         int n = in.readInt();
         Point[] points = new Point[n];
         for (int i = 0; i < n; i++) {

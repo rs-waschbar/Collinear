@@ -1,7 +1,9 @@
+import java.util.Arrays;
 import java.util.Comparator;
-import java.util.Objects;
 
+import edu.princeton.cs.algs4.In;
 import edu.princeton.cs.algs4.StdDraw;
+import edu.princeton.cs.algs4.StdOut;
 
 public class Point implements Comparable<Point> {
 
@@ -75,25 +77,6 @@ public class Point implements Comparable<Point> {
     }
 
     /**
-     * Equals with
-     * @param o
-     * @return
-     */
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Point point = (Point) o;
-        return x == point.x &&
-                y == point.y;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(x, y);
-    }
-
-    /**
      * Compares two points by the slope they make with this point.
      * The slope is defined as in the slopeTo() method.
      *
@@ -103,7 +86,7 @@ public class Point implements Comparable<Point> {
 
         return Comparator.comparingDouble(this::slopeTo);
 //                            .thenComparing(Comparator.naturalOrder());
-//        return (p1, p2) -> Double.compare(slopeTo(p1), slopeTo(p2));
+//      return (p1, p2) -> Double.compare(slopeTo(p1), slopeTo(p2));
     }
 
 
@@ -122,6 +105,53 @@ public class Point implements Comparable<Point> {
      * Unit tests the Point data type.
      */
     public static void main(String[] args) {
+        In in = new In("D:\\input20.txt");
+        int n = in.readInt();
+        Point[] points = new Point[n];
+        for (int i = 0; i < n; i++) {
+            int x = in.readInt();
+            int y = in.readInt();
+            points[i] = new Point(x, y);
+            StdOut.println(points[i]);
+        }
 
+
+        StdOut.println("After sort points...");
+        Arrays.sort(points);
+        for (Point p : points)
+            StdOut.println(p);
+
+        StdOut.println("After sort slopes...");
+        Arrays.sort(points, points[0].slopeOrder());
+        for (Point p : points)
+            StdOut.println(p);
+        
+    
+        StdDraw.show(0);
+        StdDraw.setXscale(0, 32768);
+        StdDraw.setYscale(0, 32768);
+        for (Point p : points) {
+            p.draw();
+        }
+        StdDraw.show(); 
+        
     }
+        /*Point p1 = new Point(3, 3);
+        Point p2 = new Point(4, 4);
+        Point p3 = new Point(5, 5);
+        Point p4 = new Point(6, 0);
+        Point p5 = new Point(0, 6);
+        Point p6 = new Point(1, 7);
+        Point p7 = new Point(5, 5);
+
+        System.out.println("points:" + p1 + p2 + p3 + " has equals slope: "
+                + (p1.slopeTo(p2) == p2.slopeTo(p3)));
+        System.out.println("points:" + p1 + p2 + " and " + p5 + p6
+                + " has equals slope: " + (p1.slopeTo(p2) == p5.slopeTo(p6)));
+        System.out.println("points:" + p1 + p2  + " and " +  p4 + p6
+                + " has equals slope: " + (p1.slopeTo(p2) == p4.slopeTo(p6)));
+
+        System.out.println("points:" + p3 + p7 + " has compareTo int: " + p3.compareTo(p7));
+        System.out.println("points:" + p4 + p5 + " has compareTo int: " + p4.compareTo(p5));
+    }*/
 }
