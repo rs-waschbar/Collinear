@@ -48,50 +48,53 @@ public class FastCollinearPoints {
         if (points.length < 4) {
             return;
         }
-
-        ArrayList<Point> inlinePoints = new ArrayList<>();
-        inlinePoints.add(startingPoint);
-        inlinePoints.add(points[1]);
-
+        ArrayList<Point> inline = createInlineArr(startingPoint, points[1]);
         double slope = startingPoint.slopeTo(points[1]);
 
         for (int i = 2; i < points.length; i++) {
             double currentSlope = startingPoint.slopeTo(points[i]);
 
-            if (isCollinearLines(slope, currentSlope)) {
-                inlinePoints.add(points[i]);
+            if (isCollinear(slope, currentSlope)) {
+                inline.add(points[i]);
             } else {
-                if (inlinePoints.size() >= 4) {
-                    inlinePoints.sort(Comparator.naturalOrder());
-                    if (startingPoint.compareTo(inlinePoints.get(0)) == 0) {
-                        lineSegments.add(createLineFromPoints(inlinePoints));
-                    }
-                }
-
-                inlinePoints = new ArrayList<>();
-                inlinePoints.add(startingPoint);
-                inlinePoints.add(points[i]);
-
+                extractLineFromPoints(inline, startingPoint, lineSegments);
+                inline = createInlineArr(startingPoint, points[i]);
                 slope = currentSlope;
             }
         }
+        extractLineFromPoints(inline, startingPoint, lineSegments);
+    }
+
+
+
+    private ArrayList<Point> createInlineArr(Point startingPoint, Point secondPoint) {
+        ArrayList<Point> arrayList = new ArrayList<>();
+        arrayList.add(startingPoint);
+        arrayList.add(secondPoint);
+
+        return arrayList;
+    }
+
+    private boolean isCollinear(double slope, double anotherSlope) {
+        return Double.compare(slope, anotherSlope) == 0;
+    }
+
+    private void extractLineFromPoints(ArrayList<Point> inlinePoints, Point startingPoint,
+                                       ArrayList<LineSegment> lineSegments){
         if (inlinePoints.size() >= 4) {
             inlinePoints.sort(Comparator.naturalOrder());
             if (startingPoint.compareTo(inlinePoints.get(0)) == 0) {
-                lineSegments.add(createLineFromPoints(inlinePoints));
+                lineSegments.add(new LineSegment(inlinePoints.get(0),
+                                         inlinePoints.get(inlinePoints.size() -  1)));
             }
         }
     }
 
-    private boolean isCollinearLines(double slope, double anotherSlope) {
-        return Double.compare(slope, anotherSlope) == 0;
-    }
-
-
-    private LineSegment createLineFromPoints(ArrayList<Point> inlinePoints) {
-        return new LineSegment(inlinePoints.get(0),
-                                inlinePoints.get(inlinePoints.size() -  1));
-    }
+//
+//    private LineSegment createLineFromPoints(ArrayList<Point> inlinePoints) {
+//        return new LineSegment(inlinePoints.get(0),
+//                                inlinePoints.get(inlinePoints.size() -  1));
+//    }
 
     public int numberOfSegments() {
         return lines.size();
