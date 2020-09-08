@@ -83,7 +83,7 @@ public class FastCollinearPoints {
             inlinePoints.sort(Comparator.naturalOrder());
             if (startingPoint.compareTo(inlinePoints.get(0)) == 0) {
                 lineSegments.add(new LineSegment(inlinePoints.get(0),
-                                         inlinePoints.get(inlinePoints.size() -  1)));
+                                         inlinePoints.get(inlinePoints.size()-1)));
             }
         }
     }
