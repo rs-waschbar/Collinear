@@ -24,7 +24,7 @@ public class BruteCollinearPoints {
     public BruteCollinearPoints(Point[] inputPoints) {
         Point[] points = createCloneSortArray(inputPoints);
         lines = new ArrayList<>();
-        bruteSearchOneLinePoints(points);
+        bruteSearchInLinePoints(points);
     }
 
     /**
@@ -59,7 +59,7 @@ public class BruteCollinearPoints {
      *
      * @param points input Array of points for search
      */
-    private void bruteSearchOneLinePoints(Point[] points) {
+    private void bruteSearchInLinePoints(Point[] points) {
         //
         for (int p = 0; p < points.length - 3; p++) {
             for (int q = p + 1; q < points.length - 2; q++) {
@@ -97,10 +97,7 @@ public class BruteCollinearPoints {
         return lines.toArray(new LineSegment[lines.size()]);
     }
 
-    /**
-     * Helper for test search method
-     * @param args adress of test file
-     */
+
     public static void main(String[] args) {
         // read the n points from a file
         In in = new In("D:\\input200.txt"); // D:\rs1423.txt test file

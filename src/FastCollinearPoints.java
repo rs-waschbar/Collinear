@@ -4,6 +4,7 @@ import edu.princeton.cs.algs4.StdOut;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 
 public class FastCollinearPoints {
     private final ArrayList<LineSegment> lines;
@@ -13,46 +14,72 @@ public class FastCollinearPoints {
      * @param inputPoints array of points to search collinear lines
      */
     public FastCollinearPoints(Point[] inputPoints) {
-
         Point[] points = createCloneSortArray(inputPoints);
 
         lines = new ArrayList<>();
-        int count;
-        Point[] cloneForIter = points.clone();
-        Point[] visited = new Point[points.length];
-        ArrayList<Point> inline;
+        ArrayList<Point> visited = new ArrayList<>();
+        Point[] pointsClone = points.clone();
 
-        for (int p = 0; p < points.length - 1; p++) {
+        for (Point startingPoint : points) {
+            Arrays.sort(pointsClone, startingPoint.slopeOrder());
+            findLines(pointsClone, startingPoint, lines, visited);
+            visited.add(startingPoint);
+        }
+        System.out.println(lines.size() + "*****");
+    }
 
-            Arrays.sort(cloneForIter, points[p].slopeOrder());
+    private void findLines(Point[] points, Point startingPoint,
+                           ArrayList<LineSegment> lines, ArrayList<Point> visited) {
+        ArrayList<Point> inlinePoints = new ArrayList<>();
+        inlinePoints.add(startingPoint);
+        inlinePoints.add(points[1]);
 
-            inline = new ArrayList<>();
-            inline.add(cloneForIter[0]);
-            count = 1;
+        double slope = startingPoint.slopeTo(points[1]);
 
-            for (int q = 1; q < cloneForIter.length; q++) {
-                if (cloneForIter[0].slopeTo(cloneForIter[q-1]) == cloneForIter[0].slopeTo(cloneForIter[q])) {
-                    count++;
-                    inline.add(cloneForIter[q]);
-                }
-                else {
-                    if (count >= 4  && !visitedContains(inline, visited)) {
-                        lines.add(getLineFromPoints(inline));
-                        visited[p] = points[p];
+        for (int i = 2; i < points.length; i++) {
+            double currentSlope = startingPoint.slopeTo(points[i]);
+
+            if (isCollinearLines(slope, currentSlope)) {
+                inlinePoints.add(points[i]);
+            } else {
+                if (inlinePoints.size() >= 4) {
+                    inlinePoints.sort(Comparator.naturalOrder());
+                    if (startingPoint.compareTo(inlinePoints.get(0)) == 0) {
+                        lines.add(createLineFromPoints(inlinePoints));
                     }
                 }
+
+                inlinePoints = new ArrayList<>();
+                inlinePoints.add(startingPoint);
+                inlinePoints.add(points[i]);
+
+                slope = currentSlope;
+            }
+        }
+        if (inlinePoints.size() >= 4) {
+            inlinePoints.sort(Comparator.naturalOrder());
+            if (startingPoint.compareTo(inlinePoints.get(0)) == 0) {
+                lines.add(createLineFromPoints(inlinePoints));
             }
         }
     }
 
-    /**
-     * Helper method to split logic of Constructor.
-     * It's check input data for Exceptions
-     * and create sort copy of original array
-     *
-     * @param inputPoints Array of points that gets passed into constructor
-     * @return sorting copy of Array for shield original array from modifications
-     */
+    //private boolean isVisited
+
+    private boolean isCollinearLines(double slope, double anotherSlope) {
+        if (Double.compare(slope, anotherSlope) == 0)
+            return true;
+        return false;
+    }
+
+
+    private LineSegment createLineFromPoints(ArrayList<Point> inlinePoints) {
+//        inlinePoints.sort(Comparator.naturalOrder());
+        return new LineSegment(inlinePoints.get(0),
+                                inlinePoints.get(inlinePoints.size() -  1));
+    }
+
+
     private Point[] createCloneSortArray(Point[] inputPoints) {
         if (inputPoints == null)
             throw new IllegalArgumentException("Input array is null");
@@ -71,43 +98,17 @@ public class FastCollinearPoints {
         return points;
     }
 
-    private boolean visitedContains(ArrayList<Point> inline, Point[] visited) {
-        for (Point linePoint : inline) {
-            for (Point visit : visited) {
-                if (linePoint.equals(visit)) return true;
-            }
-
-        }
-        return false;
+    private void getLineFromPoints(ArrayList<Point> input) {
+        input.sort(null);
     }
 
-    private LineSegment getLineFromPoints(ArrayList<Point> input) {
-        Point[] inline = input.toArray(new Point[input.size()]);
-        Arrays.sort(inline);
-        return new LineSegment(inline[0], inline[inline.length - 1]);
-    }
-
-
-    /**
-     * Return number of collinear line segments that
-     * contains four and more points
-     *
-     * @return the number of line segments
-     */
     public int numberOfSegments() {
         return lines.size();
     }
 
-    /**
-     * Method that return array of collinear
-     * line segments
-     *
-     * @return the line segments
-     */
     public LineSegment[] segments() {
         return lines.toArray(new LineSegment[lines.size()]);
     }
-
 
     public static void main(String[] args) {
         // read the n points from a file
