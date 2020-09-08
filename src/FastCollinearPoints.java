@@ -65,8 +65,6 @@ public class FastCollinearPoints {
         extractLineFromPoints(inline, startingPoint, lineSegments);
     }
 
-
-
     private ArrayList<Point> createInlineArr(Point startingPoint, Point secondPoint) {
         ArrayList<Point> arrayList = new ArrayList<>();
         arrayList.add(startingPoint);
@@ -89,12 +87,6 @@ public class FastCollinearPoints {
             }
         }
     }
-
-//
-//    private LineSegment createLineFromPoints(ArrayList<Point> inlinePoints) {
-//        return new LineSegment(inlinePoints.get(0),
-//                                inlinePoints.get(inlinePoints.size() -  1));
-//    }
 
     public int numberOfSegments() {
         return lines.size();
