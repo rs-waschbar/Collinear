@@ -87,7 +87,7 @@ public class Point implements Comparable<Point> {
     public Comparator<Point> slopeOrder() {
 
         return Comparator.comparingDouble(this::slopeTo);
-//                            .thenComparing(Comparator.naturalOrder());
+
 //      return (p1, p2) -> Double.compare(slopeTo(p1), slopeTo(p2));
     }
 
@@ -107,38 +107,7 @@ public class Point implements Comparable<Point> {
      * Unit tests the Point data type.
      */
     public static void main(String[] args) {
-        In in = new In("D:\\input20.txt");
-        int n = in.readInt();
-        Point[] points = new Point[n];
-        for (int i = 0; i < n; i++) {
-            int x = in.readInt();
-            int y = in.readInt();
-            points[i] = new Point(x, y);
-            StdOut.println(points[i]);
-        }
-
-
-        StdOut.println("After sort points...");
-        Arrays.sort(points);
-        for (Point p : points)
-            StdOut.println(p);
-
-        StdOut.println("After sort slopes...");
-        Arrays.sort(points, points[0].slopeOrder());
-        for (Point p : points)
-            StdOut.println(p);
-        
-    
-        StdDraw.show(0);
-        StdDraw.setXscale(0, 32768);
-        StdDraw.setYscale(0, 32768);
-        for (Point p : points) {
-            p.draw();
-        }
-        StdDraw.show(); 
-        
-    }
-        /*Point p1 = new Point(3, 3);
+        Point p1 = new Point(3, 3);
         Point p2 = new Point(4, 4);
         Point p3 = new Point(5, 5);
         Point p4 = new Point(6, 0);
@@ -155,5 +124,5 @@ public class Point implements Comparable<Point> {
 
         System.out.println("points:" + p3 + p7 + " has compareTo int: " + p3.compareTo(p7));
         System.out.println("points:" + p4 + p5 + " has compareTo int: " + p4.compareTo(p5));
-    }*/
+    }
 }
